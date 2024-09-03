@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 
 const Providers = ({
   children,
@@ -8,14 +8,14 @@ const Providers = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <NextThemesProvider
-      attribute="class"
+    <ThemeProvider
+      attribute="data-theme"
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
     >
       {children}
-    </NextThemesProvider>
+    </ThemeProvider>
   );
 };
 
