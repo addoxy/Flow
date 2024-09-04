@@ -2,9 +2,11 @@ import Providers from '@/lib/providers';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const manrope = Manrope({
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
   title: 'Flow',
@@ -19,7 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn('h-screen min-h-screen w-screen bg-background antialiased', inter.className)}
+        className={cn(
+          'h-screen min-h-screen w-screen bg-background antialiased',
+          manrope.className
+        )}
       >
         <Providers>{children}</Providers>
       </body>

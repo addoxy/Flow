@@ -19,12 +19,7 @@ import { useDurationTracker } from '@/lib/hooks/use-duration-tracker';
 import { cn } from '@/lib/utils';
 import { PauseIcon, PlayIcon, RefreshCcwIcon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Manrope } from 'next/font/google';
 import { Button } from './ui/button';
-
-const manrope = Manrope({
-  subsets: ['latin'],
-});
 
 const Timer = () => {
   const { duration, isLoading } = useDurationTracker();
@@ -45,7 +40,7 @@ const Timer = () => {
       </CardHeader>
       <CardContent className="mt-8 flex flex-col items-center justify-center">
         {isLoading ? null : (
-          <span className={cn('text-7xl font-bold', manrope.className)}>
+          <span className="text-7xl font-bold">
             {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
           </span>
         )}
