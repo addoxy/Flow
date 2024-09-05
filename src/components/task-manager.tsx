@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { TodoProps, useTodoStore } from '@/lib/hooks/use-todo-store';
 import { cn } from '@/lib/utils';
-import { Plus } from 'lucide-react';
+import { Edit, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
@@ -50,13 +50,19 @@ const Todo = (props: TodoProps) => {
   }
 
   return (
-    <div className={cn('flex items-center gap-4', className)}>
-      <Checkbox
-        className="rounded-[3px]"
-        checked={completed}
-        onCheckedChange={handleCheckedChange}
-      />
-      <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
+    <div className={cn('group flex items-center justify-between gap-2', className)}>
+      <div className="flex items-center gap-4">
+        <Checkbox
+          className="rounded-[3px]"
+          checked={completed}
+          onCheckedChange={handleCheckedChange}
+        />
+        <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
+      </div>
+      <div className="flex items-center opacity-0 group-hover:opacity-100">
+        <EditTodoDialog todo={props} />
+        <DeleteTodoDialog todo={props} />
+      </div>
     </div>
   );
 };
@@ -88,7 +94,7 @@ const AddTodoDialog = () => {
       <DialogTrigger asChild>
         <Button size="icon" variant="ghost">
           <Plus className="h-5 w-5" />
-          <span className="sr-only">Reset</span>
+          <span className="sr-only">Add todo</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -110,6 +116,117 @@ const AddTodoDialog = () => {
             </Button>
             <Button type="submit" className="w-full">
               Save
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+type EditTodoDialogProps = {
+  todo: TodoProps;
+};
+
+const EditTodoDialog = (props: EditTodoDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const [todo, setTodo] = useState('');
+  const updateTodo = useTodoStore((state) => state.updateTodo);
+
+  function handleUpdateTodo(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    updateTodo(props.todo.id, todo);
+    setOpen(false);
+    setTodo('');
+  }
+
+  function handleCancel() {
+    setOpen(false);
+    setTodo('');
+  }
+
+  function handleOpenChange() {
+    setOpen(!open);
+    setTodo('');
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button size="icon" variant="ghost">
+          <Edit className="h-4 w-4" />
+          <span className="sr-only">Update todo</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Update todo</DialogTitle>
+          <DialogDescription>
+            Update your todo below. Click Save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleUpdateTodo} className="mt-4 flex flex-col">
+          <Label>Todo</Label>
+          <Input
+            defaultValue={props.todo.text}
+            onChange={(e) => setTodo(e.target.value)}
+            placeholder="Update todo..."
+            className="mt-2"
+          />
+          <div className="mt-4 flex gap-2">
+            <Button onClick={handleCancel} variant="secondary" className="w-full" type="reset">
+              Cancel
+            </Button>
+            <Button type="submit" className="w-full">
+              Save
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const DeleteTodoDialog = (props: EditTodoDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const deleteTodo = useTodoStore((state) => state.deleteTodo);
+
+  function handleUpdateTodo(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    deleteTodo(props.todo.id);
+    setOpen(false);
+  }
+
+  function handleCancel() {
+    setOpen(false);
+  }
+
+  function handleOpenChange() {
+    setOpen(!open);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button size="icon" variant="ghost">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Delete todo</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete todo</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this todo? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleUpdateTodo} className="mt-4 flex flex-col">
+          <div className="mt-4 flex gap-2">
+            <Button onClick={handleCancel} variant="secondary" className="w-full" type="reset">
+              Cancel
+            </Button>
+            <Button type="submit" variant="destructive" className="w-full">
+              Delete
             </Button>
           </div>
         </form>
