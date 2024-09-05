@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { ScrollArea } from './ui/scroll-area';
 
 const TaskManager = () => {
   const todos = useTodoStore((state) => state.todos);
@@ -30,13 +31,12 @@ const TaskManager = () => {
         </div>
       </CardHeader>
       <CardContent className="mt-8">
-        <div className="flex flex-col gap-6 divide-y px-4">
+        <ScrollArea className="flex h-full flex-col px-4">
           {todos.map((todo) => (
-            <Todo key={todo.id} {...todo} className="pt-6 first-of-type:pt-0" />
+            <Todo key={todo.id} {...todo} className="border-b p-6 first-of-type:pt-0" />
           ))}
-        </div>
+        </ScrollArea>
       </CardContent>
-      <CardFooter className="mt-8 flex items-center justify-between gap-2"></CardFooter>
     </Card>
   );
 };

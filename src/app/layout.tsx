@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          'h-screen min-h-screen w-screen bg-background antialiased',
+          'debug-screens h-screen min-h-screen w-screen bg-background antialiased',
           manrope.className
         )}
       >
