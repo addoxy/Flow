@@ -122,12 +122,12 @@ const ThemeMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button variant="ghost" className="gap-2 capitalize">
           <div
             className={cn(
               'size-4 rounded',
               theme === 'light' && 'bg-zinc-300',
-              theme === 'dark' && 'bg-zinc-800',
+              theme === 'dark' && 'bg-zinc-700',
               theme === 'rose' && 'bg-rose-500',
               theme === 'orange' && 'bg-orange-500',
               theme === 'blue' && 'bg-blue-500',
@@ -135,6 +135,7 @@ const ThemeMenu = () => {
               theme === 'violet' && 'bg-violet-500'
             )}
           />
+          {theme}
           <span className="sr-only">Theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -164,7 +165,7 @@ const ThemeMenuItem = (props: ThemeMenuItemProps) => {
         className={cn(
           'size-4 rounded hover:bg-current',
           theme === 'light' && 'bg-zinc-300',
-          theme === 'dark' && 'bg-zinc-800',
+          theme === 'dark' && 'bg-zinc-700',
           theme === 'rose' && 'bg-rose-500',
           theme === 'orange' && 'bg-orange-500',
           theme === 'blue' && 'bg-blue-500',
