@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { NoteProps, useNotesStore } from '@/lib/hooks/use-notes-store';
 import { cn } from '@/lib/utils';
+import parse from 'html-react-parser';
 import { Edit, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import RichTextEditor from './rich-text-editor';
@@ -29,7 +30,7 @@ const Notes = () => {
           <AddNoteDialog />
         </div>
       </CardHeader>
-      <CardContent className="mt-8">
+      <CardContent>
         <ScrollArea className="flex h-full flex-col">
           {notes.map((note) => (
             <Note key={note.id} {...note} className="mt-2 first-of-type:mt-0" />
@@ -45,7 +46,9 @@ const Note = (props: NoteProps & { className?: string }) => {
 
   return (
     <div className={cn('group relative', className)}>
-      <RichTextEditor content={content} editable={false} className="h-fit bg-secondary pr-24" />
+      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
+        {parse(content)}
+      </div>
       <div className="absolute right-1 top-1 opacity-0 group-hover:opacity-100">
         <div className="flex items-center">
           <UpdateNoteDialog {...props} className="hover:bg-foreground/10" />

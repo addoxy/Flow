@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type NoteProps = {
   id: string;
@@ -11,6 +11,8 @@ type RichTextState = {
   addNote: (content: string) => void;
   updateNote: (id: string, content: string) => void;
   deleteNote: (id: string) => void;
+  isHydrated: boolean;
+  setHydrated: (state: boolean) => void;
 };
 
 export const useNotesStore = create<RichTextState>()(
@@ -19,7 +21,7 @@ export const useNotesStore = create<RichTextState>()(
       notes: [],
       addNote: (content) =>
         set((state) => ({
-          notes: [...state.notes, { id: crypto.randomUUID(), content: content }],
+          notes: [...state.notes, { id: crypto.randomUUID(), content }],
         })),
       updateNote: (id, content) =>
         set((state) => ({
@@ -29,9 +31,24 @@ export const useNotesStore = create<RichTextState>()(
         set((state) => ({
           notes: state.notes.filter((note) => note.id !== id),
         })),
+      isHydrated: false,
+      setHydrated: (state: boolean) => set({ isHydrated: state }),
     }),
     {
       name: 'notes-storage',
+      storage: createJSONStorage(() => {
+        if (typeof window !== 'undefined') {
+          return window.localStorage;
+        }
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {},
+        };
+      }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated(true);
+      },
     }
   )
 );
