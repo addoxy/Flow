@@ -17,7 +17,7 @@ import {
 import { useDurationStore } from '@/lib/hooks/use-duration-store';
 import { useDurationTracker } from '@/lib/hooks/use-duration-tracker';
 import { cn } from '@/lib/utils';
-import { PauseIcon, PlayIcon, RefreshCcwIcon, Sun } from 'lucide-react';
+import { PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from './ui/button';
 
@@ -114,25 +114,27 @@ const BreakSelector = () => {
   );
 };
 
-const THEMES = [
-  'light',
-  'dark',
-  'slate',
-  'stone',
-  'rose',
-  'orange',
-  'green',
-  'blue',
-  'yellow',
-  'violet',
-];
+const THEMES = ['light', 'dark', 'rose', 'orange', 'blue', 'yellow', 'violet'];
 
 const ThemeMenu = () => {
+  const { theme } = useTheme();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size="icon" variant="ghost">
-          <Sun className="h-5 w-5" />
+          <div
+            className={cn(
+              'size-4 rounded',
+              theme === 'light' && 'bg-zinc-300',
+              theme === 'dark' && 'bg-zinc-800',
+              theme === 'rose' && 'bg-rose-500',
+              theme === 'orange' && 'bg-orange-500',
+              theme === 'blue' && 'bg-blue-500',
+              theme === 'yellow' && 'bg-yellow-500',
+              theme === 'violet' && 'bg-violet-500'
+            )}
+          />
           <span className="sr-only">Theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -161,13 +163,10 @@ const ThemeMenuItem = (props: ThemeMenuItemProps) => {
       <div
         className={cn(
           'size-4 rounded hover:bg-current',
-          theme === 'light' && 'bg-zinc-200',
-          theme === 'dark' && 'bg-zinc-900',
-          theme === 'slate' && 'bg-slate-900',
-          theme === 'stone' && 'bg-stone-900',
+          theme === 'light' && 'bg-zinc-300',
+          theme === 'dark' && 'bg-zinc-800',
           theme === 'rose' && 'bg-rose-500',
           theme === 'orange' && 'bg-orange-500',
-          theme === 'green' && 'bg-green-500',
           theme === 'blue' && 'bg-blue-500',
           theme === 'yellow' && 'bg-yellow-500',
           theme === 'violet' && 'bg-violet-500'
