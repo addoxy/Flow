@@ -1,9 +1,11 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAudioPlayer } from '@/lib/hooks/use-audio-player';
 import { cn } from '@/lib/utils';
-import { Play } from 'lucide-react';
+import { Pause, Play } from 'lucide-react';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -25,6 +27,26 @@ const SONGS: SongProps[] = [
 ];
 
 const SongPlayer = () => {
+  const { currentSong, isPlaying, play, pause, toggle, loadAudio } = useAudioPlayer();
+  const [loopCount, setLoopCount] = useState(0);
+
+  useEffect(() => {
+    SONGS.forEach((song) => loadAudio(song.name, `/audio/${song.name.toLowerCase()}.mp3`));
+  }, []);
+
+  useEffect(() => {
+    if (currentSong && isPlaying) {
+      const interval = setInterval(() => {
+        setLoopCount((prevCount) => prevCount + 1);
+      }, 60000);
+      return () => clearInterval(interval);
+    }
+  }, [currentSong, isPlaying]);
+
+  useEffect(() => {
+    setLoopCount(0);
+  }, [currentSong]);
+
   return (
     <Card>
       <CardHeader>
@@ -47,12 +69,21 @@ const Song = (
   }
 ) => {
   const { name, descriptor, className } = props;
+  const { currentSong, isPlaying, play, toggle } = useAudioPlayer();
+
+  function handleSong() {
+    if (currentSong && currentSong === name) {
+      toggle(currentSong);
+    } else {
+      play(name);
+    }
+  }
 
   return (
     <div className={cn('flex items-center justify-between', className)}>
       <div className="flex items-center gap-4">
         <Image
-          src={`/${name.toLowerCase()}.jpg`}
+          src={`/images/${name.toLowerCase()}.jpg`}
           className="rounded-md"
           alt={name}
           width={64}
@@ -63,8 +94,12 @@ const Song = (
           <span className="text-muted-foreground">{descriptor}</span>
         </div>
       </div>
-      <Button size="icon" variant="ghost">
-        <Play className="h-5 w-5" />
+      <Button onClick={handleSong} size="icon" variant="ghost">
+        {currentSong && currentSong === name && isPlaying ? (
+          <Pause className="h-5 w-5" />
+        ) : (
+          <Play className="h-5 w-5" />
+        )}
       </Button>
     </div>
   );
