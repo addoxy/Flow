@@ -5,7 +5,7 @@ import { useAudioPlayer } from '@/lib/hooks/use-audio-player';
 import { cn } from '@/lib/utils';
 import { Pause, Play } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -27,25 +27,11 @@ const SONGS: SongProps[] = [
 ];
 
 const SongPlayer = () => {
-  const { currentSong, isPlaying, play, pause, toggle, loadAudio } = useAudioPlayer();
-  const [loopCount, setLoopCount] = useState(0);
+  const { loadAudio } = useAudioPlayer();
 
   useEffect(() => {
     SONGS.forEach((song) => loadAudio(song.name, `/audio/${song.name.toLowerCase()}.mp3`));
   }, []);
-
-  useEffect(() => {
-    if (currentSong && isPlaying) {
-      const interval = setInterval(() => {
-        setLoopCount((prevCount) => prevCount + 1);
-      }, 60000);
-      return () => clearInterval(interval);
-    }
-  }, [currentSong, isPlaying]);
-
-  useEffect(() => {
-    setLoopCount(0);
-  }, [currentSong]);
 
   return (
     <Card>
