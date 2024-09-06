@@ -1,3 +1,4 @@
+import Notes from '@/components/notes';
 import SongPlayer from '@/components/song-player';
 import TaskManager from '@/components/task-manager';
 import Timer from '@/components/timer';
@@ -8,6 +9,7 @@ export default function Home() {
       <Timer />
       <TaskManager />
       <SongPlayer />
+      <Notes />
     </div>
   );
 }
