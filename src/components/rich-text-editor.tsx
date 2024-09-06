@@ -19,7 +19,7 @@ const RichTextEditor = ({
     editorProps: {
       attributes: {
         class: cn(
-          'h-20 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 overflow-auto',
+          'h-28 min-h-12 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 overflow-auto',
           className
         ),
       },
