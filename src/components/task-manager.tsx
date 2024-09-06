@@ -60,8 +60,8 @@ const Todo = (props: TodoProps) => {
         <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
       </div>
       <div className="flex items-center opacity-0 group-hover:opacity-100">
-        <EditTodoDialog todo={props} />
-        <DeleteTodoDialog todo={props} />
+        <EditTodoDialog {...props} />
+        <DeleteTodoDialog {...props} />
       </div>
     </div>
   );
@@ -124,30 +124,26 @@ const AddTodoDialog = () => {
   );
 };
 
-type EditTodoDialogProps = {
-  todo: TodoProps;
-};
-
-const EditTodoDialog = (props: EditTodoDialogProps) => {
+const EditTodoDialog = (props: TodoProps) => {
   const [open, setOpen] = useState(false);
   const [todo, setTodo] = useState('');
   const updateTodo = useTodoStore((state) => state.updateTodo);
 
   function handleUpdateTodo(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    updateTodo(props.todo.id, todo);
+    updateTodo(props.id, todo);
     setOpen(false);
-    setTodo('');
+    setTodo(todo);
   }
 
   function handleCancel() {
     setOpen(false);
-    setTodo('');
+    setTodo(props.text);
   }
 
   function handleOpenChange() {
     setOpen(!open);
-    setTodo('');
+    setTodo(props.text);
   }
 
   return (
@@ -168,7 +164,7 @@ const EditTodoDialog = (props: EditTodoDialogProps) => {
         <form onSubmit={handleUpdateTodo} className="mt-4 flex flex-col">
           <Label>Todo</Label>
           <Input
-            defaultValue={props.todo.text}
+            value={todo}
             onChange={(e) => setTodo(e.target.value)}
             placeholder="Update todo..."
             className="mt-2"
@@ -187,13 +183,13 @@ const EditTodoDialog = (props: EditTodoDialogProps) => {
   );
 };
 
-const DeleteTodoDialog = (props: EditTodoDialogProps) => {
+const DeleteTodoDialog = (props: TodoProps) => {
   const [open, setOpen] = useState(false);
   const deleteTodo = useTodoStore((state) => state.deleteTodo);
 
   function handleUpdateTodo(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    deleteTodo(props.todo.id);
+    deleteTodo(props.id);
     setOpen(false);
   }
 
