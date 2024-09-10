@@ -49,6 +49,9 @@ export const useDurationStore = create<DurationState>()(
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);
       },
+      partialize: (state) => ({
+        isCompleted: state.isCompleted,
+      }),
     }
   )
 );

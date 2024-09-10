@@ -7,17 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useDurationStore } from '@/lib/hooks/use-duration-store';
 import { useDurationTracker } from '@/lib/hooks/use-duration-tracker';
 import { cn } from '@/lib/utils';
-import { PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
+import { ChevronDown, PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
 import { Button } from './ui/button';
@@ -27,7 +20,7 @@ const Timer = () => {
   const { duration, isLoading } = useDurationTracker();
   const toggleTimer = useDurationStore((state) => state.togglePause);
   const resetTimer = useDurationStore((state) => state.resetDuration);
-  const isTimerPaused = useDurationStore((state) => state.isPaused);
+  const isPaused = useDurationStore((state) => state.isPaused);
 
   const minutes = Math.floor(duration / 60);
   const seconds = duration % 60;
@@ -50,7 +43,7 @@ const Timer = () => {
         )}
         <div className="mt-4 flex items-center gap-2">
           <Button onClick={toggleTimer} size="icon" variant="icon">
-            {isTimerPaused ? (
+            {isPaused ? (
               <>
                 <PlayIcon className="h-5 w-5" />
                 <span className="sr-only">Start</span>
@@ -62,7 +55,12 @@ const Timer = () => {
               </>
             )}
           </Button>
-          <Button onClick={resetTimer} size="icon" variant="icon">
+          <Button
+            onClick={resetTimer}
+            size="icon"
+            variant="icon"
+            disabled={duration > 0 && !isPaused}
+          >
             <RefreshCcwIcon className="h-5 w-5" />
             <span className="sr-only">Reset</span>
           </Button>
@@ -75,29 +73,48 @@ const Timer = () => {
   );
 };
 
-const ALLOWED_DURATIONS = [15, 25, 30, 45, 60, 90, 120];
+const ALLOWED_DURATIONS = [1, 15, 25, 30, 45, 60, 90, 120];
 
 const DurationSelector = ({ className }: { className?: string }) => {
+  const duration = useDurationStore((state) => state.duration);
   const setDuration = useDurationStore((state) => state.setDuration);
+  const isPaused = useDurationStore((state) => state.isPaused);
+
   const [open, setOpen] = useState(false);
+  const [pickedDuration, setPickedDuration] = useState(duration);
 
   return (
     <div className={cn('flex w-full flex-col', className, open && 'opacity-100')}>
       <span className="mb-2 text-sm">Work duration</span>
-      <Select
-        open={open}
-        onOpenChange={setOpen}
-        onValueChange={(value) => setDuration(parseInt(value.split(' ')[0]))}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a work duration" />
-        </SelectTrigger>
-        <SelectContent>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            className={cn(
+              'justify-between gap-2 capitalize disabled:cursor-not-allowed disabled:bg-accent/50 disabled:text-muted-foreground disabled:opacity-50 data-[state=open]:opacity-100',
+              className
+            )}
+            disabled={duration > 0 && !isPaused}
+          >
+            {pickedDuration > 0 ? `${pickedDuration} minutes` : 'Select a work duration'}
+            <ChevronDown className="size-4" />
+            <span className="sr-only">Theme</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-64 sm:w-96">
           {ALLOWED_DURATIONS.map((allowedDuration) => (
-            <SelectItem value={allowedDuration + ' minutes'}>{allowedDuration} minutes</SelectItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                setDuration(allowedDuration);
+                setPickedDuration(allowedDuration);
+              }}
+              className="cursor-pointer"
+            >
+              {allowedDuration} minutes
+            </DropdownMenuItem>
           ))}
-        </SelectContent>
-      </Select>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
