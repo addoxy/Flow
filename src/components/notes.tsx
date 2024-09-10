@@ -104,7 +104,9 @@ const AddNoteDialog = ({ className }: { className?: string }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a new note</DialogTitle>
-          <DialogDescription>Add a new note below. Click Save when you're done.</DialogDescription>
+          <DialogDescription>
+            Add a new note below. Click Save when you&apos;re done.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleAddNote} className="mt-4 flex flex-col">
           <Label className="mb-3">Note</Label>
@@ -162,7 +164,7 @@ const UpdateNoteDialog = (props: NoteProps & { className?: string }) => {
         <DialogHeader>
           <DialogTitle>Update note</DialogTitle>
           <DialogDescription>
-            Update your note below. Click Save when you're done.
+            Update your note below. Click Save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleUpdateNote} className="mt-4 flex flex-col">

@@ -117,7 +117,9 @@ const AddTodoDialog = ({ className }: { className?: string }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a new todo</DialogTitle>
-          <DialogDescription>Add a new todo below. Click Save when you're done.</DialogDescription>
+          <DialogDescription>
+            Add a new todo below. Click Save when you&apos;re done.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleAddTodo} className="mt-4 flex flex-col">
           <Label>Todo</Label>
@@ -175,7 +177,7 @@ const EditTodoDialog = (props: TodoProps) => {
         <DialogHeader>
           <DialogTitle>Update todo</DialogTitle>
           <DialogDescription>
-            Update your todo below. Click Save when you're done.
+            Update your todo below. Click Save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleUpdateTodo} className="mt-4 flex flex-col">
