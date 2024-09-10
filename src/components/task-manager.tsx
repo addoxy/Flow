@@ -39,9 +39,9 @@ const TaskManager = () => {
               <Reorder.Item
                 key={todo.id}
                 value={todo}
-                className="cursor-pointer border-b p-6 animate-transition last-of-type:border-b-0 hover:bg-accent"
+                className="group/reorder cursor-pointer border-b last-of-type:border-b-0"
               >
-                <Todo key={todo.id} {...todo} />
+                <Todo key={todo.id} {...todo} className="p-6" />
               </Reorder.Item>
             ))}
           </Reorder.Group>
@@ -60,7 +60,12 @@ const Todo = (props: TodoProps) => {
   }
 
   return (
-    <div className={cn('group/todo flex items-center justify-between gap-2', className)}>
+    <div
+      className={cn(
+        'group/todo flex items-center justify-between gap-2 animate-transition group-hover/reorder:bg-accent',
+        className
+      )}
+    >
       <div className="flex items-center gap-4">
         <Checkbox
           className="rounded-[3px]"
