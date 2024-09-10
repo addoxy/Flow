@@ -24,6 +24,8 @@ const TaskManager = () => {
   const todos = useTodoStore((state) => state.todos);
   const setTodos = useTodoStore((state) => state.setTodos);
 
+  if (!todos || todos.length === 0) return <NoTodos />;
+
   return (
     <Card className="group">
       <CardHeader>
@@ -107,7 +109,7 @@ const AddTodoDialog = ({ className }: { className?: string }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" className={cn(className)}>
+        <Button size="icon" variant="icon" className={cn(className)}>
           <Plus className="h-5 w-5" />
           <span className="sr-only">Add todo</span>
         </Button>
@@ -243,6 +245,22 @@ const DeleteTodoDialog = (props: TodoProps) => {
         </form>
       </DialogContent>
     </Dialog>
+  );
+};
+
+const NoTodos = () => {
+  return (
+    <Card className="group">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Tasks</CardTitle>
+          <AddTodoDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+        </div>
+      </CardHeader>
+      <CardContent className="flex items-center justify-center">
+        <p className="text-center">You have no tasks</p>
+      </CardContent>
+    </Card>
   );
 };
 

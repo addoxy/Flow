@@ -80,7 +80,7 @@ const Song = (
           <span className="text-muted-foreground">{descriptor}</span>
         </div>
       </div>
-      <Button onClick={handleSong} size="icon" variant="ghost">
+      <Button onClick={handleSong} size="icon" variant="icon">
         {currentSong && currentSong === name && isPlaying ? (
           <Pause className="h-5 w-5" />
         ) : (

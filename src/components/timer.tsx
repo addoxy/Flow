@@ -37,7 +37,7 @@ const Timer = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Timer</CardTitle>
-          <ThemeMenu className="animate-transition opacity-0 group-hover:opacity-100" />
+          <ThemeMenu className="opacity-0 animate-transition group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent className="mt-8 flex flex-col items-center justify-center">
@@ -49,7 +49,7 @@ const Timer = () => {
           </span>
         )}
         <div className="mt-4 flex items-center gap-2">
-          <Button onClick={toggleTimer} size="icon" variant="ghost">
+          <Button onClick={toggleTimer} size="icon" variant="icon">
             {isTimerPaused ? (
               <>
                 <PlayIcon className="h-5 w-5" />
@@ -62,14 +62,14 @@ const Timer = () => {
               </>
             )}
           </Button>
-          <Button onClick={resetTimer} size="icon" variant="ghost">
+          <Button onClick={resetTimer} size="icon" variant="icon">
             <RefreshCcwIcon className="h-5 w-5" />
             <span className="sr-only">Reset</span>
           </Button>
         </div>
       </CardContent>
       <CardFooter className="mt-8 flex items-center justify-between gap-2">
-        <DurationSelector className="animate-transition opacity-0 group-hover:opacity-100" />
+        <DurationSelector className="opacity-0 animate-transition group-hover:opacity-100" />
       </CardFooter>
     </Card>
   );
@@ -111,7 +111,7 @@ const ThemeMenu = ({ className }: { className?: string }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
+          variant="icon"
           className={cn('gap-2 capitalize data-[state=open]:opacity-100', className)}
         >
           <div

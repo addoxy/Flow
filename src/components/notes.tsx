@@ -24,6 +24,8 @@ const Notes = () => {
   const notes = useNotesStore((state) => state.notes);
   const setNotes = useNotesStore((state) => state.setNotes);
 
+  if (!notes || notes.length === 0) return <NoNotes />;
+
   return (
     <Card className="group">
       <CardHeader>
@@ -94,7 +96,7 @@ const AddNoteDialog = ({ className }: { className?: string }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" className={cn(className)}>
+        <Button size="icon" variant="icon" className={cn(className)}>
           <Plus className="h-5 w-5" />
           <span className="sr-only">Add notes</span>
         </Button>
@@ -230,6 +232,22 @@ const DeleteNoteDialog = (props: NoteProps & { className?: string }) => {
         </form>
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const NoNotes = () => {
+  return (
+    <Card className="group">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Notes</CardTitle>
+          <AddNoteDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+        </div>
+      </CardHeader>
+      <CardContent className="flex items-center justify-center">
+        <p className="text-center">You have no notes</p>
+      </CardContent>
+    </Card>
   );
 };
 
