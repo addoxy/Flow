@@ -36,7 +36,7 @@ const SongPlayer = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Song Player</CardTitle>
+        <CardTitle>Audios</CardTitle>
       </CardHeader>
       <CardContent className="mt-8">
         <ScrollArea className="flex h-full flex-col">

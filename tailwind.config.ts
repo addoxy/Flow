@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+const plugin = require('tailwindcss/plugin');
 
 const config: Config = {
   darkMode: ['class'],
@@ -58,6 +59,17 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-debug-screens'), require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-debug-screens'),
+    require('tailwindcss-animate'),
+    plugin(({ addUtilities }: { addUtilities: any }) => {
+      addUtilities({
+        '.animate-transition': {
+          '@apply transition-all duration-300': {},
+        },
+      });
+    }),
+  ],
 };
+
 export default config;

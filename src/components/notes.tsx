@@ -23,11 +23,11 @@ const Notes = () => {
   const notes = useNotesStore((state) => state.notes);
 
   return (
-    <Card>
+    <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog />
+          <AddNoteDialog className="animate-transition opacity-0 group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
@@ -45,11 +45,11 @@ const Note = (props: NoteProps & { className?: string }) => {
   const { id, content, className } = props;
 
   return (
-    <div className={cn('group relative', className)}>
+    <div className={cn('group/note relative', className)}>
       <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
         {parse(content)}
       </div>
-      <div className="absolute right-1 top-1 opacity-0 group-hover:opacity-100">
+      <div className="animate-transition absolute right-1 top-1 opacity-0 group-hover/note:opacity-100">
         <div className="flex items-center">
           <UpdateNoteDialog {...props} className="hover:bg-foreground/10" />
           <DeleteNoteDialog {...props} className="hover:bg-foreground/10" />
@@ -59,7 +59,7 @@ const Note = (props: NoteProps & { className?: string }) => {
   );
 };
 
-const AddNoteDialog = () => {
+const AddNoteDialog = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState<string>('');
   const addNote = useNotesStore((state) => state.addNote);
@@ -84,7 +84,7 @@ const AddNoteDialog = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" className={cn(className)}>
           <Plus className="h-5 w-5" />
           <span className="sr-only">Add notes</span>
         </Button>

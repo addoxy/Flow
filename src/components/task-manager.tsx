@@ -23,11 +23,11 @@ const TaskManager = () => {
   const todos = useTodoStore((state) => state.todos);
 
   return (
-    <Card>
+    <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Task Manager</CardTitle>
-          <AddTodoDialog />
+          <CardTitle>Tasks</CardTitle>
+          <AddTodoDialog className="animate-transition opacity-0 group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
@@ -50,7 +50,7 @@ const Todo = (props: TodoProps) => {
   }
 
   return (
-    <div className={cn('group flex items-center justify-between gap-2', className)}>
+    <div className={cn('group/todo flex items-center justify-between gap-2', className)}>
       <div className="flex items-center gap-4">
         <Checkbox
           className="rounded-[3px]"
@@ -59,7 +59,7 @@ const Todo = (props: TodoProps) => {
         />
         <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
       </div>
-      <div className="flex items-center opacity-0 group-hover:opacity-100">
+      <div className="animate-transition flex items-center opacity-0 group-hover/todo:opacity-100">
         <EditTodoDialog {...props} />
         <DeleteTodoDialog {...props} />
       </div>
@@ -67,7 +67,7 @@ const Todo = (props: TodoProps) => {
   );
 };
 
-const AddTodoDialog = () => {
+const AddTodoDialog = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [todo, setTodo] = useState('');
   const addTodo = useTodoStore((state) => state.addTodo);
@@ -92,7 +92,7 @@ const AddTodoDialog = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" className={cn(className)}>
           <Plus className="h-5 w-5" />
           <span className="sr-only">Add todo</span>
         </Button>

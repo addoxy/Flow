@@ -19,7 +19,9 @@ import { useDurationTracker } from '@/lib/hooks/use-duration-tracker';
 import { cn } from '@/lib/utils';
 import { PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useState } from 'react';
 import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
 
 const Timer = () => {
   const { duration, isLoading } = useDurationTracker();
@@ -31,15 +33,17 @@ const Timer = () => {
   const seconds = duration % 60;
 
   return (
-    <Card>
+    <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Pomodoro Timer</CardTitle>
-          <ThemeMenu />
+          <CardTitle>Timer</CardTitle>
+          <ThemeMenu className="animate-transition opacity-0 group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent className="mt-8 flex flex-col items-center justify-center">
-        {isLoading ? null : (
+        {isLoading ? (
+          <Skeleton className="h-[72px] w-52 rounded-md" />
+        ) : (
           <span className="text-7xl font-bold">
             {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
           </span>
@@ -65,8 +69,7 @@ const Timer = () => {
         </div>
       </CardContent>
       <CardFooter className="mt-8 flex items-center justify-between gap-2">
-        <DurationSelector />
-        <BreakSelector />
+        <DurationSelector className="animate-transition opacity-0 group-hover:opacity-100" />
       </CardFooter>
     </Card>
   );
@@ -74,13 +77,18 @@ const Timer = () => {
 
 const ALLOWED_DURATIONS = [15, 25, 30, 45, 60, 90, 120];
 
-const DurationSelector = () => {
+const DurationSelector = ({ className }: { className?: string }) => {
   const setDuration = useDurationStore((state) => state.setDuration);
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex w-full flex-col">
+    <div className={cn('flex w-full flex-col', className, open && 'opacity-100')}>
       <span className="mb-2 text-sm">Work duration</span>
-      <Select onValueChange={(value) => setDuration(parseInt(value.split(' ')[0]))}>
+      <Select
+        open={open}
+        onOpenChange={setOpen}
+        onValueChange={(value) => setDuration(parseInt(value.split(' ')[0]))}
+      >
         <SelectTrigger>
           <SelectValue placeholder="Select a work duration" />
         </SelectTrigger>
@@ -94,35 +102,18 @@ const DurationSelector = () => {
   );
 };
 
-const ALLOWED_BREAKS = [5, 10, 15];
-
-const BreakSelector = () => {
-  return (
-    <div className="flex w-full flex-col">
-      <span className="mb-2 text-sm">Break duration</span>
-      <Select>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a break duration" />
-        </SelectTrigger>
-        <SelectContent>
-          {ALLOWED_BREAKS.map((allowedBreak) => (
-            <SelectItem value={allowedBreak + ' minutes'}>{allowedBreak} minutes</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-};
-
 const THEMES = ['light', 'dark', 'rose', 'orange', 'blue', 'yellow', 'violet'];
 
-const ThemeMenu = () => {
+const ThemeMenu = ({ className }: { className?: string }) => {
   const { theme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="gap-2 capitalize">
+        <Button
+          variant="ghost"
+          className={cn('gap-2 capitalize data-[state=open]:opacity-100', className)}
+        >
           <div
             className={cn(
               'size-4 rounded',
