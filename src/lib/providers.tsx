@@ -8,12 +8,7 @@ const Providers = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <ThemeProvider
-      attribute="data-theme"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
       {children}
     </ThemeProvider>
   );
