@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { NoteProps, useNotesStore } from '@/lib/hooks/use-notes-store';
 import { cn } from '@/lib/utils';
+import { Reorder } from 'framer-motion';
 import parse from 'html-react-parser';
 import { Edit, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
@@ -21,20 +22,29 @@ import { ScrollArea } from './ui/scroll-area';
 
 const Notes = () => {
   const notes = useNotesStore((state) => state.notes);
+  const setNotes = useNotesStore((state) => state.setNotes);
 
   return (
     <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog className="animate-transition opacity-0 group-hover:opacity-100" />
+          <AddNoteDialog className="opacity-0 animate-transition group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
         <ScrollArea className="flex h-full flex-col">
-          {notes.map((note) => (
-            <Note key={note.id} {...note} className="mt-2 first-of-type:mt-0" />
-          ))}
+          <Reorder.Group axis="y" values={notes} onReorder={setNotes} layoutScroll>
+            {notes.map((note) => (
+              <Reorder.Item
+                key={note.id}
+                value={note}
+                className="group/reorder mt-2 cursor-pointer first-of-type:mt-0"
+              >
+                <Note key={note.id} {...note} />
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
         </ScrollArea>
       </CardContent>
     </Card>
@@ -46,10 +56,10 @@ const Note = (props: NoteProps & { className?: string }) => {
 
   return (
     <div className={cn('group/note relative', className)}>
-      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
+      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background animate-transition placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-hover/reorder:bg-accent">
         {parse(content)}
       </div>
-      <div className="animate-transition absolute right-1 top-1 opacity-0 group-hover/note:opacity-100">
+      <div className="absolute right-1 top-1 opacity-0 animate-transition group-hover/note:opacity-100">
         <div className="flex items-center">
           <UpdateNoteDialog {...props} className="hover:bg-foreground/10" />
           <DeleteNoteDialog {...props} className="hover:bg-foreground/10" />

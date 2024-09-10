@@ -20,6 +20,7 @@
     "@tiptap/starter-kit": "^2.6.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.5.4",
     "html-react-parser": "^5.1.15",
     "lucide-react": "^0.438.0",
     "next": "14.2.7",

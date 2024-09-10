@@ -16,6 +16,7 @@ type TodoState = {
   updateTodo: (id: string, text: string) => void;
   isHydrated: boolean;
   setHydrated: (state: boolean) => void;
+  setTodos: (todos: TodoProps[]) => void;
 };
 
 export const useTodoStore = create<TodoState>()(
@@ -42,6 +43,7 @@ export const useTodoStore = create<TodoState>()(
         })),
       isHydrated: false,
       setHydrated: (state: boolean) => set({ isHydrated: state }),
+      setTodos: (todos: TodoProps[]) => set({ todos }),
     }),
     {
       name: 'todo-storage',

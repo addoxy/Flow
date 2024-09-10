@@ -13,6 +13,7 @@ type RichTextState = {
   deleteNote: (id: string) => void;
   isHydrated: boolean;
   setHydrated: (state: boolean) => void;
+  setNotes: (notes: NoteProps[]) => void;
 };
 
 export const useNotesStore = create<RichTextState>()(
@@ -33,6 +34,7 @@ export const useNotesStore = create<RichTextState>()(
         })),
       isHydrated: false,
       setHydrated: (state: boolean) => set({ isHydrated: state }),
+      setNotes: (notes: NoteProps[]) => set({ notes }),
     }),
     {
       name: 'notes-storage',

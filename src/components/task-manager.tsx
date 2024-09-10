@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { TodoProps, useTodoStore } from '@/lib/hooks/use-todo-store';
 import { cn } from '@/lib/utils';
+import { Reorder } from 'framer-motion';
 import { Edit, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Button } from './ui/button';
@@ -21,24 +22,29 @@ import { ScrollArea } from './ui/scroll-area';
 
 const TaskManager = () => {
   const todos = useTodoStore((state) => state.todos);
+  const setTodos = useTodoStore((state) => state.setTodos);
 
   return (
     <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Tasks</CardTitle>
-          <AddTodoDialog className="animate-transition opacity-0 group-hover:opacity-100" />
+          <AddTodoDialog className="opacity-0 animate-transition group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
         <ScrollArea className="flex h-full flex-col px-4">
-          {todos.map((todo) => (
-            <Todo
-              key={todo.id}
-              {...todo}
-              className="border-b p-6 first-of-type:pt-0 last-of-type:border-b-0"
-            />
-          ))}
+          <Reorder.Group axis="y" values={todos} onReorder={setTodos} layoutScroll>
+            {todos.map((todo, i) => (
+              <Reorder.Item
+                key={todo.id}
+                value={todo}
+                className="cursor-pointer border-b p-6 animate-transition last-of-type:border-b-0 hover:bg-accent"
+              >
+                <Todo key={todo.id} {...todo} />
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
         </ScrollArea>
       </CardContent>
     </Card>
@@ -63,7 +69,7 @@ const Todo = (props: TodoProps) => {
         />
         <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
       </div>
-      <div className="animate-transition flex items-center opacity-0 group-hover/todo:opacity-100">
+      <div className="flex items-center opacity-0 animate-transition group-hover/todo:opacity-100">
         <EditTodoDialog {...props} />
         <DeleteTodoDialog {...props} />
       </div>
