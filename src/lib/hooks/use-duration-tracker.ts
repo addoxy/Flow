@@ -1,8 +1,24 @@
 import { useEffect } from 'react';
+import { useAudioPlayer } from './use-audio-player';
 import { useDurationStore } from './use-duration-store';
 
 export const useDurationTracker = () => {
-  const { duration, decrementDuration, isHydrated } = useDurationStore();
+  const { duration, decrementDuration, isHydrated, isCompleted } = useDurationStore();
+  const { loadAudio, play, pause } = useAudioPlayer();
+
+  useEffect(() => {
+    loadAudio('success', '/audio/success.mp3');
+  }, []);
+
+  useEffect(() => {
+    if (isCompleted) {
+      play('success');
+      const timeout = setTimeout(() => {
+        pause();
+      }, 6500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isCompleted, play, pause]);
 
   useEffect(() => {
     if (!isHydrated) return;
