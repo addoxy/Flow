@@ -46,7 +46,7 @@ const Note = (props: NoteProps & { className?: string }) => {
 
   return (
     <div className={cn('group/note relative', className)}>
-      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
+      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
         {parse(content)}
       </div>
       <div className="animate-transition absolute right-1 top-1 opacity-0 group-hover/note:opacity-100">
