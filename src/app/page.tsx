@@ -5,7 +5,7 @@ import Timer from '@/components/timer';
 
 export default function Home() {
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 sm:gap-6 sm:p-6 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 p-4 sm:gap-6 sm:p-6 lg:grid-cols-2">
       <Timer />
       <TaskManager />
       <SongPlayer />

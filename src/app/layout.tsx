@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'debug-screens h-screen min-h-screen w-screen bg-background antialiased',
+          'debug-screens mx-auto h-screen min-h-screen w-screen max-w-screen-2xl bg-background antialiased',
           manrope.className
         )}
       >
