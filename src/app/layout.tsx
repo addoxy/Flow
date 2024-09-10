@@ -10,7 +10,26 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: 'Flow',
-  description: 'Get work done!',
+  description: 'Flow is a web app that helps you get things done.',
+  authors: [{ name: 'Addoxy' }],
+  category: 'Productivity',
+  keywords: ['productivity', 'task', 'todo', 'notes', 'timer', 'audio'],
+  metadataBase: new URL('https://flow.addoxy.me'),
+  openGraph: {
+    title: 'Flow',
+    description: 'Flow is a web app that helps you get things done.',
+    url: 'https://flow.addoxy.me',
+    siteName: 'Flow',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 180,
+        height: 180,
+      },
+    ],
+    locale: 'en-US',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -22,8 +41,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'debug-screens mx-auto h-screen min-h-screen w-screen max-w-screen-2xl bg-background antialiased',
-          manrope.className
+          'mx-auto h-screen min-h-screen max-w-screen-2xl bg-background antialiased',
+          manrope.className,
+          process.env.NODE_ENV === 'development' && 'debug-screens'
         )}
       >
         <Providers>{children}</Providers>
