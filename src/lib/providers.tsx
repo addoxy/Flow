@@ -8,7 +8,7 @@ const Providers = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="data-theme" defaultTheme="dark">
       {children}
     </ThemeProvider>
   );
