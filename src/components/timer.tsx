@@ -104,6 +104,7 @@ const DurationSelector = ({ className }: { className?: string }) => {
         <DropdownMenuContent align="start" className="w-64 sm:w-96">
           {ALLOWED_DURATIONS.map((allowedDuration) => (
             <DropdownMenuItem
+              key={allowedDuration}
               onSelect={() => {
                 setDuration(allowedDuration);
                 setPickedDuration(allowedDuration);

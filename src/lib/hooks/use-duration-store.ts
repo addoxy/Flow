@@ -50,7 +50,8 @@ export const useDurationStore = create<DurationState>()(
         state?.setHydrated(true);
       },
       partialize: (state) => ({
-        isCompleted: state.isCompleted,
+        duration: state.duration,
+        isPaused: state.isPaused,
       }),
     }
   )
