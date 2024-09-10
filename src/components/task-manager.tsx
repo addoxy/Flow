@@ -33,7 +33,11 @@ const TaskManager = () => {
       <CardContent>
         <ScrollArea className="flex h-full flex-col px-4">
           {todos.map((todo) => (
-            <Todo key={todo.id} {...todo} className="border-b p-6 first-of-type:pt-0" />
+            <Todo
+              key={todo.id}
+              {...todo}
+              className="border-b p-6 first-of-type:pt-0 last-of-type:border-b-0"
+            />
           ))}
         </ScrollArea>
       </CardContent>
