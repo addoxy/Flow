@@ -62,6 +62,7 @@ const config: Config = {
   plugins: [
     require('tailwindcss-debug-screens'),
     require('tailwindcss-animate'),
+    require('tailwind-scrollbar')({ nocompatible: true, preferredStrategy: 'pseudoelements' }),
     plugin(({ addUtilities }: { addUtilities: any }) => {
       addUtilities({
         '.animate-transition': {

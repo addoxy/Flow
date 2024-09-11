@@ -38,7 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className="scrollbar-thumb-rounded-full scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent"
+    >
       <body
         className={cn(
           'mx-auto h-screen min-h-screen max-w-screen-2xl bg-background antialiased',
