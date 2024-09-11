@@ -30,7 +30,7 @@ const Timer = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Timer</CardTitle>
-          <ThemeMenu className="opacity-0 animate-transition group-hover:opacity-100" />
+          <ThemeMenu className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent className="mt-8 flex flex-col items-center justify-center">
@@ -67,7 +67,7 @@ const Timer = () => {
         </div>
       </CardContent>
       <CardFooter className="mt-8 flex items-center justify-between gap-2">
-        <DurationSelector className="opacity-0 animate-transition group-hover:opacity-100" />
+        <DurationSelector className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
       </CardFooter>
     </Card>
   );
@@ -91,7 +91,7 @@ const DurationSelector = ({ className }: { className?: string }) => {
           <Button
             variant="outline"
             className={cn(
-              'justify-between gap-2 capitalize disabled:cursor-not-allowed disabled:bg-accent/50 disabled:text-muted-foreground disabled:opacity-50 data-[state=open]:opacity-100',
+              'justify-between gap-2 capitalize data-[state=open]:opacity-100 disabled:cursor-not-allowed disabled:bg-accent/50 disabled:text-muted-foreground disabled:opacity-50',
               className
             )}
             disabled={duration > 0 && !isPaused}

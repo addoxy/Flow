@@ -31,7 +31,7 @@ const Notes = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+          <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
@@ -58,10 +58,10 @@ const Note = (props: NoteProps & { className?: string }) => {
 
   return (
     <div className={cn('group/note relative', className)}>
-      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background animate-transition placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-hover/reorder:bg-accent">
+      <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background animate-transition placeholder:text-muted-foreground group-hover/reorder:bg-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
         {parse(content)}
       </div>
-      <div className="absolute right-1 top-1 opacity-0 animate-transition group-hover/note:opacity-100">
+      <div className="absolute right-1 top-1 animate-transition lg:opacity-0 lg:group-hover/note:opacity-100">
         <div className="flex items-center">
           <UpdateNoteDialog {...props} className="hover:bg-foreground/10" />
           <DeleteNoteDialog {...props} className="hover:bg-foreground/10" />
@@ -243,7 +243,7 @@ export const NoNotes = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+          <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent className="flex items-center justify-center">

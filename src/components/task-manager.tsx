@@ -31,7 +31,7 @@ const TaskManager = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Tasks</CardTitle>
-          <AddTodoDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+          <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent>
@@ -76,7 +76,7 @@ const Todo = (props: TodoProps) => {
         />
         <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
       </div>
-      <div className="flex items-center opacity-0 animate-transition group-hover/todo:opacity-100">
+      <div className="flex items-center animate-transition lg:opacity-0 lg:group-hover/todo:opacity-100">
         <EditTodoDialog {...props} />
         <DeleteTodoDialog {...props} />
       </div>
@@ -256,7 +256,7 @@ const NoTodos = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Tasks</CardTitle>
-          <AddTodoDialog className="opacity-0 animate-transition group-hover:opacity-100" />
+          <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
         </div>
       </CardHeader>
       <CardContent className="flex items-center justify-center">
