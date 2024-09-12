@@ -41,16 +41,18 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className="scrollbar-thumb-rounded-full scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent"
+      className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent scrollbar-thumb-rounded-full"
     >
       <body
         className={cn(
-          'mx-auto h-screen min-h-screen max-w-screen-2xl bg-background antialiased',
+          'bg-background antialiased',
           manrope.className,
           process.env.NODE_ENV === 'development' && 'debug-screens'
         )}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="mx-auto h-full w-full max-w-screen-2xl">{children}</div>
+        </Providers>
       </body>
     </html>
   );
