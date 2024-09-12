@@ -67,7 +67,7 @@ const Timer = () => {
         </div>
       </CardContent>
       <CardFooter className="mt-8 flex items-center justify-between gap-2">
-        <DurationSelector className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+        <DurationSelector />
       </CardFooter>
     </Card>
   );
@@ -84,21 +84,28 @@ const DurationSelector = ({ className }: { className?: string }) => {
   const [pickedDuration, setPickedDuration] = useState(duration);
 
   return (
-    <div className={cn('flex w-full flex-col', className, open && 'opacity-100')}>
-      <span className="mb-2 text-sm">Work duration</span>
+    <div className={cn('flex w-full flex-col', className)}>
+      <span
+        className={cn(
+          'mb-2 text-sm opacity-0 animate-transition group-hover:opacity-100',
+          open && 'opacity-100'
+        )}
+      >
+        Work duration
+      </span>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              'justify-between gap-2 capitalize data-[state=open]:opacity-100 disabled:cursor-not-allowed disabled:bg-accent/50 disabled:text-muted-foreground disabled:opacity-50',
-              className
+              'justify-between gap-2 capitalize animate-transition group-hover:opacity-100 lg:opacity-0',
+              open && 'lg:opacity-100'
             )}
             disabled={duration > 0 && !isPaused}
           >
             {pickedDuration > 0 ? `${pickedDuration} minutes` : 'Select a work duration'}
             <ChevronDown className="size-4" />
-            <span className="sr-only">Theme</span>
+            <span className="sr-only">Select a work duration</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64 sm:w-96">
