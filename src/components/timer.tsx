@@ -77,11 +77,11 @@ const ALLOWED_DURATIONS = [1, 15, 25, 30, 45, 60, 90, 120];
 
 const DurationSelector = ({ className }: { className?: string }) => {
   const duration = useDurationStore((state) => state.duration);
+  const pickedDuration = useDurationStore((state) => state.pickedDuration);
   const setDuration = useDurationStore((state) => state.setDuration);
   const isPaused = useDurationStore((state) => state.isPaused);
 
   const [open, setOpen] = useState(false);
-  const [pickedDuration, setPickedDuration] = useState(duration);
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
@@ -98,7 +98,7 @@ const DurationSelector = ({ className }: { className?: string }) => {
           <Button
             variant="outline"
             className={cn(
-              'justify-between gap-2 capitalize animate-transition group-hover:opacity-100 lg:opacity-0',
+              'disabled: justify-between gap-2 capitalize animate-transition group-hover:opacity-100 disabled:opacity-50 disabled:group-hover:opacity-50 lg:opacity-0',
               open && 'lg:opacity-100'
             )}
             disabled={duration > 0 && !isPaused}
@@ -114,7 +114,6 @@ const DurationSelector = ({ className }: { className?: string }) => {
               key={allowedDuration}
               onSelect={() => {
                 setDuration(allowedDuration);
-                setPickedDuration(allowedDuration);
               }}
               className="cursor-pointer"
             >

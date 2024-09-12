@@ -24,13 +24,16 @@ export const useDurationTracker = () => {
     if (!isHydrated) return;
 
     const interval = setInterval(() => {
-      if (duration > 0) {
-        decrementDuration();
-      }
+      requestAnimationFrame(() => {
+        const currentDuration = useDurationStore.getState().duration;
+        if (currentDuration > 0) {
+          decrementDuration();
+        }
+      });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [duration, decrementDuration, isHydrated]);
+  }, [decrementDuration, isHydrated]);
 
   return { duration, isLoading: !isHydrated };
 };

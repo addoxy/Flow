@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 type DurationState = {
   duration: number;
+  pickedDuration: number;
   isPaused: boolean;
   isCompleted: boolean;
   setDuration: (minutes: number) => void;
@@ -17,10 +18,16 @@ export const useDurationStore = create<DurationState>()(
   persist(
     (set, get) => ({
       duration: 0,
+      pickedDuration: 0,
       isPaused: false,
       isCompleted: false,
       setDuration: (minutes: number) =>
-        set({ duration: minutes * 60, isPaused: true, isCompleted: false }),
+        set({
+          duration: minutes * 60,
+          pickedDuration: minutes,
+          isPaused: true,
+          isCompleted: false,
+        }),
       decrementDuration: () =>
         set((state) => {
           const newDuration = Math.max(0, state.duration - (get().isPaused ? 0 : 1));
@@ -52,6 +59,7 @@ export const useDurationStore = create<DurationState>()(
       partialize: (state) => ({
         duration: state.duration,
         isPaused: state.isPaused,
+        pickedDuration: state.pickedDuration,
       }),
     }
   )
