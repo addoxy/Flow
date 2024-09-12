@@ -130,7 +130,7 @@ const DurationSelector = ({ className }: { className?: string }) => {
 const THEMES = ['light', 'dark', 'rose', 'orange', 'blue', 'yellow', 'violet'];
 
 const ThemeMenu = ({ className }: { className?: string }) => {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -142,6 +142,8 @@ const ThemeMenu = ({ className }: { className?: string }) => {
           <div
             className={cn(
               'size-4 rounded',
+              theme === 'system' && resolvedTheme === 'light' && 'bg-zinc-300',
+              theme === 'system' && resolvedTheme === 'dark' && 'bg-zinc-700',
               theme === 'light' && 'bg-zinc-300',
               theme === 'dark' && 'bg-zinc-700',
               theme === 'rose' && 'bg-rose-500',
@@ -151,7 +153,7 @@ const ThemeMenu = ({ className }: { className?: string }) => {
               theme === 'violet' && 'bg-violet-500'
             )}
           />
-          {theme}
+          {theme === 'system' ? resolvedTheme : theme}
           <span className="sr-only">Theme</span>
         </Button>
       </DropdownMenuTrigger>
