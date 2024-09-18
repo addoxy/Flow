@@ -3,6 +3,9 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 type DurationState = {
   duration: number;
+  allowedDurations: number[];
+  addAllowedDuration: (duration: number) => void;
+  removeAllowedDuration: (duration: number) => void;
   pickedDuration: number;
   isPaused: boolean;
   isCompleted: boolean;
@@ -19,8 +22,18 @@ export const useDurationStore = create<DurationState>()(
     (set, get) => ({
       duration: 0,
       pickedDuration: 0,
+      allowedDurations: [15, 25, 30, 45, 60, 90, 120],
       isPaused: false,
       isCompleted: false,
+      addAllowedDuration: (duration: number) =>
+        set((state) => ({
+          allowedDurations: [...state.allowedDurations, duration].sort((a, b) => a - b),
+        })),
+      removeAllowedDuration: (duration: number) =>
+        set((state) => ({
+          allowedDurations: state.allowedDurations.filter((d) => d !== duration),
+          pickedDuration: state.pickedDuration === duration ? 0 : state.pickedDuration,
+        })),
       setDuration: (minutes: number) =>
         set({
           duration: minutes * 60,
@@ -62,6 +75,7 @@ export const useDurationStore = create<DurationState>()(
         state?.setHydrated(true);
       },
       partialize: (state) => ({
+        allowedDurations: state.allowedDurations,
         duration: state.duration,
         isPaused: state.isPaused,
         pickedDuration: state.pickedDuration,

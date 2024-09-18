@@ -2,6 +2,14 @@
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,11 +18,12 @@ import {
 import { useDurationStore } from '@/lib/hooks/use-duration-store';
 import { useDurationTracker } from '@/lib/hooks/use-duration-tracker';
 import { cn } from '@/lib/utils';
-import { ChevronDown, PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
+import { ChevronDown, PauseIcon, PlayIcon, Plus, RefreshCcwIcon, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Label } from './ui/label';
 import { Skeleton } from './ui/skeleton';
 
 const Timer = () => {
@@ -74,13 +83,13 @@ const Timer = () => {
   );
 };
 
-const ALLOWED_DURATIONS = [15, 25, 30, 45, 60, 90, 120];
-
 const DurationSelector = ({ className }: { className?: string }) => {
+  const allowedDurations = useDurationStore((state) => state.allowedDurations);
   const duration = useDurationStore((state) => state.duration);
   const pickedDuration = useDurationStore((state) => state.pickedDuration);
   const setDuration = useDurationStore((state) => state.setDuration);
   const isPaused = useDurationStore((state) => state.isPaused);
+  const removeAllowedDuration = useDurationStore((state) => state.removeAllowedDuration);
 
   const [open, setOpen] = useState(false);
 
@@ -110,31 +119,105 @@ const DurationSelector = ({ className }: { className?: string }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" className="w-64 sm:w-96">
-          <Input
-            type="number"
-            min={1}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') setOpen(false);
-            }}
-            onChange={(e) => setDuration(Number(e.target.value))}
-            className="mb-1 w-full cursor-text rounded bg-secondary"
-            placeholder="Custom duration"
-          />
-          {ALLOWED_DURATIONS.map((allowedDuration) => (
+          <div className="flex gap-1">
+            <Input
+              type="number"
+              min={1}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setOpen(false);
+              }}
+              onChange={(e) => setDuration(Number(e.target.value))}
+              className="mb-1 w-full cursor-text rounded bg-secondary"
+              placeholder="Custom duration"
+            />
+            <AddDurationDialog />
+          </div>
+          {allowedDurations.map((allowedDuration) => (
             <div
               key={allowedDuration}
               onClick={() => {
                 setDuration(allowedDuration);
                 setOpen(false);
               }}
-              className="flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent focus:bg-accent focus:text-accent-foreground"
+              className="group flex cursor-pointer items-center justify-between rounded-sm p-2 text-sm transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent focus:bg-accent focus:text-accent-foreground"
             >
               {allowedDuration} minutes
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeAllowedDuration(allowedDuration);
+                }}
+                variant="ghost"
+                className="h-full px-2 animate-transition lg:opacity-0 lg:group-hover:opacity-100"
+              >
+                <X className="size-3" />
+                <span className="sr-only">Remove duration</span>
+              </Button>
             </div>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+  );
+};
+
+const AddDurationDialog = () => {
+  const [open, setOpen] = useState(false);
+  const addAllowedDuration = useDurationStore((state) => state.addAllowedDuration);
+  const [timer, setTimer] = useState<number | null>(null);
+
+  function handleAddDuration(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setOpen(false);
+    if (timer) {
+      addAllowedDuration(timer);
+    }
+  }
+
+  function handleCancel() {
+    setOpen(false);
+    setTimer(null);
+  }
+
+  function handleOpenChange() {
+    setOpen(!open);
+    setTimer(null);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="secondary" className="rounded">
+          <Plus className="size-4" />
+          <span className="sr-only">Add a custom duration</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add a custom duration</DialogTitle>
+          <DialogDescription>
+            Add a custom duration below. Click Save when you&apos;re done.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleAddDuration} className="mt-4 flex flex-col">
+          <Label className="mb-3">Duration (in minutes)</Label>
+          <Input
+            placeholder="Custom duration"
+            type="number"
+            min={1}
+            onChange={(e) => setTimer(Number(e.target.value))}
+          />
+          <div className="mt-4 flex gap-2">
+            <Button onClick={handleCancel} variant="secondary" className="w-full" type="reset">
+              Cancel
+            </Button>
+            <Button type="submit" className="w-full">
+              Save
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
