@@ -319,7 +319,7 @@ const ArchivedNotes = ({ className }: { className?: string }) => {
         <DialogHeader>
           <DialogTitle>Archived todos</DialogTitle>
           <DialogDescription>
-            See all archived notes below. Unarchive or delete them if you&apos;re don't need them.
+            See all archived notes below. Unarchive or delete them if you don&apos;t need them.
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex h-full flex-col">
