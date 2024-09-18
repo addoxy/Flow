@@ -14,6 +14,7 @@ import { ChevronDown, PauseIcon, PlayIcon, RefreshCcwIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
 
 const Timer = () => {
@@ -108,17 +109,28 @@ const DurationSelector = ({ className }: { className?: string }) => {
             <span className="sr-only">Select a work duration</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64 sm:w-96">
+        <DropdownMenuContent align="center" className="w-64 sm:w-96">
+          <Input
+            type="number"
+            min={1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') setOpen(false);
+            }}
+            onChange={(e) => setDuration(Number(e.target.value))}
+            className="mb-1 w-full cursor-text rounded bg-secondary"
+            placeholder="Custom duration"
+          />
           {ALLOWED_DURATIONS.map((allowedDuration) => (
-            <DropdownMenuItem
+            <div
               key={allowedDuration}
-              onSelect={() => {
+              onClick={() => {
                 setDuration(allowedDuration);
+                setOpen(false);
               }}
-              className="cursor-pointer"
+              className="flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent focus:bg-accent focus:text-accent-foreground"
             >
               {allowedDuration} minutes
-            </DropdownMenuItem>
+            </div>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
