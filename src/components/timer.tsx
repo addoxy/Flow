@@ -73,7 +73,7 @@ const Timer = () => {
   );
 };
 
-const ALLOWED_DURATIONS = [1, 15, 25, 30, 45, 60, 90, 120];
+const ALLOWED_DURATIONS = [15, 25, 30, 45, 60, 90, 120];
 
 const DurationSelector = ({ className }: { className?: string }) => {
   const duration = useDurationStore((state) => state.duration);
