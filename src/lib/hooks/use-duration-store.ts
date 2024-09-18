@@ -37,7 +37,12 @@ export const useDurationStore = create<DurationState>()(
           };
         }),
       togglePause: () => set((state) => ({ isPaused: !state.isPaused })),
-      resetDuration: () => set({ duration: 0, isPaused: false, isCompleted: false }),
+      resetDuration: () =>
+        set((state) => ({
+          duration: state.pickedDuration * 60,
+          isPaused: true,
+          isCompleted: false,
+        })),
       isHydrated: false,
       setHydrated: (state: boolean) => set({ isHydrated: state }),
     }),
