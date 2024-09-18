@@ -9,10 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { TodoProps, useTodoStore } from '@/lib/hooks/use-todo-store';
 import { cn } from '@/lib/utils';
 import { Reorder } from 'framer-motion';
-import { Edit, Plus, X } from 'lucide-react';
+import { Archive, Edit, MoreVertical, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
@@ -21,8 +27,10 @@ import { Label } from './ui/label';
 import { ScrollArea } from './ui/scroll-area';
 
 const TaskManager = () => {
-  const todos = useTodoStore((state) => state.todos);
+  const allTodos = useTodoStore((state) => state.todos);
   const setTodos = useTodoStore((state) => state.setTodos);
+
+  const todos = allTodos.filter((todo) => !todo.archived);
 
   if (!todos || todos.length === 0) return <NoTodos />;
 
@@ -31,7 +39,10 @@ const TaskManager = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Tasks</CardTitle>
-          <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          <div className="flex items-center">
+            <ArchivedTodos className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+            <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -76,11 +87,61 @@ const Todo = (props: TodoProps) => {
         />
         <p className={cn('text-sm', completed && 'line-through')}>{text}</p>
       </div>
-      <div className="flex items-center animate-transition lg:opacity-0 lg:group-hover/todo:opacity-100">
-        <EditTodoDialog {...props} />
-        <DeleteTodoDialog {...props} />
-      </div>
+      <TodoMenu
+        todo={props}
+        className="animate-transition lg:opacity-0 lg:group-hover/todo:opacity-100"
+      />
     </div>
+  );
+};
+
+type TodoMenuProps = {
+  todo: TodoProps;
+  className?: string;
+};
+
+const TodoMenu = (props: TodoMenuProps) => {
+  const { todo, className } = props;
+  const [open, setOpen] = useState(false);
+  const archiveTodo = useTodoStore((state) => state.archiveTodo);
+  const unarchiveTodo = useTodoStore((state) => state.unarchiveTodo);
+  const isArchived = todo.archived;
+
+  const handleArchive = () => {
+    if (isArchived) {
+      unarchiveTodo(todo.id);
+    } else {
+      archiveTodo(todo.id);
+    }
+  };
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className={cn(className, open && 'lg:opacity-100')}>
+          <MoreVertical className="size-4 rotate-90" />
+          <span className="sr-only">Todo menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Button
+            variant="ghost"
+            className="h-9 w-full cursor-pointer justify-start gap-2 px-2 text-sm hover:bg-accent"
+            onClick={handleArchive}
+          >
+            <Archive className="size-3" />
+            {isArchived ? 'Unarchive' : 'Archive'}
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <EditTodoDialog {...todo} />
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <DeleteTodoDialog {...todo} />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -168,9 +229,12 @@ const EditTodoDialog = (props: TodoProps) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <Edit className="h-4 w-4" />
-          <span className="sr-only">Update todo</span>
+        <Button
+          variant="ghost"
+          className="h-9 w-full justify-start gap-2 px-2 text-sm hover:bg-accent"
+        >
+          <Edit className="size-3" />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -223,9 +287,12 @@ const DeleteTodoDialog = (props: TodoProps) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Delete todo</span>
+        <Button
+          variant="ghost"
+          className="h-9 w-full justify-start gap-2 px-2 text-sm hover:bg-accent"
+        >
+          <X className="size-3" />
+          Delete
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -250,13 +317,50 @@ const DeleteTodoDialog = (props: TodoProps) => {
   );
 };
 
+const ArchivedTodos = ({ className }: { className?: string }) => {
+  const archivedTodos = useTodoStore((state) => state.todos.filter((todo) => todo.archived));
+
+  if (!archivedTodos || archivedTodos.length === 0) return null;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="icon" variant="icon" className={cn(className)}>
+          <Archive className="h-4 w-4" />
+          <span className="sr-only">Archived todos</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Archived todos</DialogTitle>
+          <DialogDescription>
+            See all archived todos below. Unarchive or delete them if you&apos;re done with them.
+          </DialogDescription>
+        </DialogHeader>
+        <ScrollArea className="flex h-full flex-col">
+          {archivedTodos.map((todo, i) => (
+            <Todo
+              key={todo.id}
+              {...todo}
+              className="border-b p-6 last-of-type:border-b-0 hover:bg-accent"
+            />
+          ))}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const NoTodos = () => {
   return (
     <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Tasks</CardTitle>
-          <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          <div className="flex items-center">
+            <ArchivedTodos className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+            <AddTodoDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          </div>
         </div>
       </CardHeader>
       <CardContent className="flex items-center justify-center">

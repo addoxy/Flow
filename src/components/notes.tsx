@@ -13,16 +13,24 @@ import { NoteProps, useNotesStore } from '@/lib/hooks/use-notes-store';
 import { cn } from '@/lib/utils';
 import { Reorder } from 'framer-motion';
 import parse from 'html-react-parser';
-import { Edit, Plus, X } from 'lucide-react';
+import { Archive, Edit, MoreVertical, Plus, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import RichTextEditor from './rich-text-editor';
 import { Button } from './ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import { Label } from './ui/label';
 import { ScrollArea } from './ui/scroll-area';
 
 const Notes = () => {
-  const notes = useNotesStore((state) => state.notes);
+  const allNotes = useNotesStore((state) => state.notes);
   const setNotes = useNotesStore((state) => state.setNotes);
+
+  const notes = allNotes.filter((note) => !note.archived);
 
   if (!notes || notes.length === 0) return <NoNotes />;
 
@@ -31,7 +39,10 @@ const Notes = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          <div className="flex items-center">
+            <ArchivedNotes className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+            <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -61,13 +72,61 @@ const Note = (props: NoteProps & { className?: string }) => {
       <div className="min-h-12 w-full overflow-auto rounded-md bg-secondary/60 px-3 py-2 pr-16 text-sm ring-offset-background animate-transition placeholder:text-muted-foreground group-hover/reorder:bg-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50">
         {parse(content)}
       </div>
-      <div className="absolute right-1 top-1 animate-transition lg:opacity-0 lg:group-hover/note:opacity-100">
-        <div className="flex items-center">
-          <UpdateNoteDialog {...props} className="hover:bg-foreground/10" />
-          <DeleteNoteDialog {...props} className="hover:bg-foreground/10" />
-        </div>
-      </div>
+      <NoteMenu
+        note={props}
+        className="absolute right-1 top-1 animate-transition lg:opacity-0 lg:group-hover/note:opacity-100"
+      ></NoteMenu>
     </div>
+  );
+};
+
+type NotesMenuProps = {
+  note: NoteProps;
+  className?: string;
+};
+
+const NoteMenu = (props: NotesMenuProps) => {
+  const { note, className } = props;
+  const [open, setOpen] = useState(false);
+  const archiveNote = useNotesStore((state) => state.archiveNote);
+  const unarchiveNote = useNotesStore((state) => state.unarchiveNote);
+  const isArchived = note.archived;
+
+  const handleArchive = () => {
+    if (isArchived) {
+      unarchiveNote(note.id);
+    } else {
+      archiveNote(note.id);
+    }
+  };
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className={cn(className, open && 'lg:opacity-100')}>
+          <MoreVertical className="size-4 rotate-90" />
+          <span className="sr-only">Todo menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Button
+            variant="ghost"
+            className="h-9 w-full cursor-pointer justify-start gap-2 px-2 text-sm hover:bg-accent"
+            onClick={handleArchive}
+          >
+            <Archive className="size-3" />
+            {isArchived ? 'Unarchive' : 'Archive'}
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <EditNoteDialog {...note} />
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <DeleteNoteDialog {...note} />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -130,7 +189,7 @@ const AddNoteDialog = ({ className }: { className?: string }) => {
   );
 };
 
-const UpdateNoteDialog = (props: NoteProps & { className?: string }) => {
+const EditNoteDialog = (props: NoteProps & { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState<string>(props.content);
   const updateNote = useNotesStore((state) => state.updateNote);
@@ -155,9 +214,12 @@ const UpdateNoteDialog = (props: NoteProps & { className?: string }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" className={cn(props.className)}>
-          <Edit className="h-4 w-4" />
-          <span className="sr-only">Update note</span>
+        <Button
+          variant="ghost"
+          className="h-9 w-full justify-start gap-2 px-2 text-sm hover:bg-accent"
+        >
+          <Edit className="size-3" />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -210,9 +272,12 @@ const DeleteNoteDialog = (props: NoteProps & { className?: string }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" className={cn(props.className)}>
-          <X className="h-4 w-4" />
-          <span className="sr-only">Delete note</span>
+        <Button
+          variant="ghost"
+          className="h-9 w-full justify-start gap-2 px-2 text-sm hover:bg-accent"
+        >
+          <X className="size-3" />
+          Delete
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -237,13 +302,50 @@ const DeleteNoteDialog = (props: NoteProps & { className?: string }) => {
   );
 };
 
-export const NoNotes = () => {
+const ArchivedNotes = ({ className }: { className?: string }) => {
+  const archivedNotes = useNotesStore((state) => state.notes.filter((note) => note.archived));
+
+  if (!archivedNotes || archivedNotes.length === 0) return null;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="icon" variant="icon" className={cn(className)}>
+          <Archive className="h-4 w-4" />
+          <span className="sr-only">Archived notes</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Archived todos</DialogTitle>
+          <DialogDescription>
+            See all archived notes below. Unarchive or delete them if you&apos;re don't need them.
+          </DialogDescription>
+        </DialogHeader>
+        <ScrollArea className="flex h-full flex-col">
+          {archivedNotes.map((note) => (
+            <Note
+              key={note.id}
+              {...note}
+              className="group/reorder mt-2 cursor-pointer first-of-type:mt-0"
+            />
+          ))}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const NoNotes = () => {
   return (
     <Card className="group">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Notes</CardTitle>
-          <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          <div className="flex items-center">
+            <ArchivedNotes className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+            <AddNoteDialog className="animate-transition lg:opacity-0 lg:group-hover:opacity-100" />
+          </div>
         </div>
       </CardHeader>
       <CardContent className="flex items-center justify-center">
