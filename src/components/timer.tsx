@@ -45,13 +45,13 @@ const Timer = () => {
           <Button onClick={toggleTimer} size="icon" variant="icon">
             {isPaused ? (
               <>
-                <PlayIcon className="h-5 w-5" />
-                <span className="sr-only">Start</span>
+                <PauseIcon className="h-5 w-5" />
+                <span className="sr-only">Pause</span>
               </>
             ) : (
               <>
-                <PauseIcon className="h-5 w-5" />
-                <span className="sr-only">Pause</span>
+                <PlayIcon className="h-5 w-5" />
+                <span className="sr-only">Start</span>
               </>
             )}
           </Button>

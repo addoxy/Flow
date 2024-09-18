@@ -82,9 +82,9 @@ const Song = (
       </div>
       <Button onClick={handleSong} size="icon" variant="icon">
         {currentSong && currentSong === name && isPlaying ? (
-          <Pause className="h-5 w-5" />
-        ) : (
           <Play className="h-5 w-5" />
+        ) : (
+          <Pause className="h-5 w-5" />
         )}
       </Button>
     </div>
